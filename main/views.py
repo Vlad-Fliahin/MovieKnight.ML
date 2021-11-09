@@ -1,5 +1,6 @@
 import numpy as np
 import requests
+from django.http import JsonResponse
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
@@ -21,4 +22,4 @@ class UserPrediction(APIView):
         # create JSON object
         output = {'movie_id': movie['id']}
 
-        return Response(output)
+        return JsonResponse(output)
