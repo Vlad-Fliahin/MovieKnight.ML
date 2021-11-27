@@ -54,7 +54,7 @@ class UserPrediction(APIView):
         if not movie_id:
             return JsonResponse({'movie_id': np.random.choice(movies_data.index, 1)})
 
-        random_movies = np.random.choice(movies_data.index, 10000)
+        random_movies = np.random.choice(movies_data.index, 2000)
         differences = dict()
 
         for film in random_movies:
