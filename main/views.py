@@ -39,7 +39,7 @@ class UserPrediction(APIView):
         response_dict = json.loads(almost_json)
         print(response_dict)
         watch_history = response_dict['watchHistory']
-
+        print(watch_history)
         movie_id = ""
         watched_movies = []
         for watch in watch_history:
@@ -51,8 +51,9 @@ class UserPrediction(APIView):
         movies_data.index = movies_data.tconst
         movies_data.drop(columns=['tconst'], inplace=True)
         # print(movies_data.columns)
+        print(movie_id)
         if not movie_id:
-            return JsonResponse({'movie_id': np.random.choice(movies_data.index, 1)})
+            return JsonResponse({'movie_id': np.random.choice(movies_data.index, 1)[0]})
 
         random_movies = np.random.choice(movies_data.index, 2000)
         differences = dict()
