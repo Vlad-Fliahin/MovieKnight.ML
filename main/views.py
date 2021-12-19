@@ -29,17 +29,26 @@ def diff(a, b):
 
 class UserPrediction(APIView):
     def get(self, request, username):
+        movies_data = pd.read_csv(f'{BASE_DIR}/static/movies_data.csv')
+        movies_data.index = movies_data.tconst
+        movies_data.drop(columns=['tconst'], inplace=True)
+
         url = f"https://movieknightweb.azurewebsites.net/api/User/{username}"
         response = requests.request("GET", url)
 
-        # print(response.content)
+        print(response.content)
 
-        # print(type(response.content))
-        almost_json = response.content.decode('utf8').replace("'", '"')
-        response_dict = json.loads(almost_json)
-        print(response_dict)
-        watch_history = response_dict['watchHistory']
-        print(watch_history)
+        try:
+            # print(type(response.content))
+            almost_json = response.content.decode('utf8').replace("'", '"')
+            print(almost_json)
+            response_dict = json.loads(almost_json)
+            print(response_dict)
+            watch_history = response_dict['watchHistory']
+            print(watch_history)
+        except:
+            return JsonResponse({'movie_id': np.random.choice(movies_data.index, 1)[0]})
+
         movie_id = ""
         watched_movies = []
         for watch in watch_history:
@@ -47,9 +56,6 @@ class UserPrediction(APIView):
             if not movie_id and watch["rating"] >= 8:
                 movie_id = watch["movie"]["imDbId"]
 
-        movies_data = pd.read_csv(f'{BASE_DIR}/static/movies_data.csv')
-        movies_data.index = movies_data.tconst
-        movies_data.drop(columns=['tconst'], inplace=True)
         # print(movies_data.columns)
         print(movie_id)
         if not movie_id:
